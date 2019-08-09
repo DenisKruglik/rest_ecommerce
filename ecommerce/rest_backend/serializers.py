@@ -31,13 +31,13 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
 class CartInventorySerializer(serializers.ModelSerializer):
     qty = serializers.IntegerField(min_value=1)
-    # product = ProductSerializer()
+    product = ProductSerializer(read_only=True)
+    product_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = CartInventory
-        fields = ['id', 'product', 'qty', 'cart']
+        fields = ['id', 'product_id', 'product', 'qty', 'cart']
         extra_kwargs = {'cart': {'required': False}}
-        depth = 1
 
 
 class CartSerializer(serializers.ModelSerializer):

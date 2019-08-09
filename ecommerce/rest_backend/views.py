@@ -60,7 +60,7 @@ class AddToCart(APIView):
         if serializer.is_valid():
             item = CartInventory(**serializer.validated_data)
             inventory = CartService.add_to_cart(request.user, item)
-            serializer = CartInventorySerializer(inventory)
+            serializer = CartInventorySerializer(inventory, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
