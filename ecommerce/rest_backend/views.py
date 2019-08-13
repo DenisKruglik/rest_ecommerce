@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from .serializers import UserSerializer, GroupSerializer, CategorySerializer, ProductSerializer, CartSerializer, \
-    CartInventorySerializer, OrderSerializer
+from .serializers import UserSerializer, GroupSerializer, CategorySerializer, CategoryWithProductsSerializer, \
+    ProductSerializer, CartSerializer, CartInventorySerializer, OrderSerializer
 from .models import Category, Product, CartInventory, Order
 from rest_framework import permissions
 from rest_framework.views import APIView
@@ -34,7 +34,11 @@ class GroupViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return CategorySerializer
+        return CategoryWithProductsSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):

@@ -7,7 +7,7 @@ class PrintableModel:
     printables = []
 
     def __str__(self):
-        return ', '.join(['%s=%s' % (key, self.__getattribute__(key)) for key in self.printables])
+        return ', '.join(['%s=%s' % (key, getattr(self, key)) for key in self.printables])
 
 
 class Category(PrintableModel, models.Model):

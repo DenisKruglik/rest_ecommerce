@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from .models import Category, Product, CartInventory, Cart, OrderInventory, Order
+from django.core.paginator import Paginator
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -21,12 +22,20 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'id', 'sku', 'name', 'price', 'description', 'categories']
 
 
-class CategorySerializer(serializers.HyperlinkedModelSerializer):
+class CategoryWithProductsSerializer(serializers.HyperlinkedModelSerializer):
     products = ProductSerializer(many=True, read_only=True)
+
+    # TODO: add pagination for nested products
 
     class Meta:
         model = Category
         fields = ['url', 'id', 'name', 'products']
+
+
+class CategorySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['url', 'id', 'name']
 
 
 class CartInventorySerializer(serializers.ModelSerializer):
