@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import configureStore from "./configureStore";
 import WelcomePage from "./components/WelcomePage";
 import CategoryPage from "./components/CategoryPage";
+import ProductPage from "./components/ProductPage";
 
 const store = configureStore();
 
@@ -18,6 +19,7 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={WelcomePage}/>
                 <Route path="/category/:category" component={CategoryPage}/>
+                <Route path="/product/:product" component={ProductPage}/>
               </Switch>
             </div>
           </Router>
