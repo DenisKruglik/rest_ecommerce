@@ -12,7 +12,7 @@ function requestCategories() {
 function receiveCategories(json) {
     return {
         type: RECEIVE_CATEGORIES,
-        categories: json.results,
+        categories: json,
         receivedAt: Date.now()
     };
 }
@@ -55,7 +55,8 @@ function receiveProducts(category, page, json) {
         type: RECEIVE_PRODUCTS,
         category,
         page,
-        products: json.products,
+        totalPages: json.total_pages,
+        products: json.results,
         receivedAt: Date.now()
     }
 }
@@ -63,17 +64,21 @@ function receiveProducts(category, page, json) {
 function fetchProducts(category, page) {
     return dispatch => {
         dispatch(requestProducts(category, page));
-        return fetch(`/categories/${category}/${page ? `?page=${page}` : ''}`, )
+        let params = new URLSearchParams({
+            category,
+            page
+        });
+        return fetch(`/products/${params ? `?${params.toString()}` : ''}`, )
             .then(response => response.json())
             .then(json => dispatch(receiveProducts(category, page, json)));
     };
 }
 
-function shouldFetchProducts(state, id) {
+function shouldFetchProducts(state, id, page) {
     const category = state.categories.find(item => item.id === id);
 
     if (category) {
-        if (!category.products || !category.products.length) {
+        if (!category.products || !category.products.length || category.page !== page) {
             return true;
         } else if (category.areProductsFetching) {
             return false;
@@ -84,7 +89,7 @@ function shouldFetchProducts(state, id) {
 
 export function fetchProductsIfNeeded(category, page = 1) {
     return (dispatch, getState) => {
-        if (shouldFetchProducts(getState(), category)) {
+        if (shouldFetchProducts(getState(), category, page)) {
             return dispatch(fetchProducts(category, page));
         }
     };

@@ -22,6 +22,7 @@ const products = (state = {
         case RECEIVE_PRODUCTS:
             return Object.assign({}, state, {
                 areProductsFetching: false,
+                totalPages: action.totalPages,
                 products: action.products,
                 page: action.page,
                 productsLastUpdated: action.receivedAt

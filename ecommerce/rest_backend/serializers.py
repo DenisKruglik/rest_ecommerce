@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from .models import Category, Product, CartInventory, Cart, OrderInventory, Order
-from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.http import Http404
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -23,32 +21,12 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'id', 'sku', 'name', 'price', 'description', 'categories']
 
 
-class CategoryWithProductsSerializer(serializers.HyperlinkedModelSerializer):
-    products = serializers.SerializerMethodField('paginated_products')
-
-    def paginated_products(self, obj):
-        paginator = Paginator(obj.products.all(), 20)
-        page = self.context['request'].query_params.get('page') or 1
-
-        try:
-            page_number = paginator.validate_number(page)
-        except InvalidPage:
-            raise Http404('Page number cannot be converted to an integer.')
-
-        try:
-            products = paginator.page(page_number)
-        except EmptyPage as e:
-            raise Http404('Invalid page %s: %s' % (page_number, str(e)))
-
-        serializer = ProductSerializer(products, many=True, context=self.context)
-        return serializer.data
-
-    class Meta:
-        model = Category
-        fields = ['url', 'id', 'name', 'products']
-
-
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
+    # product_count = serializers.SerializerMethodField()
+
+    # def get_product_count(self):
+
+
     class Meta:
         model = Category
         fields = ['url', 'id', 'name']

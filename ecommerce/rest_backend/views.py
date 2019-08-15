@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from .serializers import UserSerializer, GroupSerializer, CategorySerializer, CategoryWithProductsSerializer, \
+from .serializers import UserSerializer, GroupSerializer, CategorySerializer, \
     ProductSerializer, CartSerializer, CartInventorySerializer, OrderSerializer
 from .models import Category, Product, CartInventory, Order
 from rest_framework import permissions
@@ -11,6 +11,8 @@ from rest_framework import mixins
 from rest_framework import generics
 from .permissions import IsOwnerOrAdmin, IsAdminOrReadOnly
 from .services import CartService
+from .filters import ProductInCategoryFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -34,17 +36,15 @@ class GroupViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = Category.objects.all()
-
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return CategorySerializer
-        return CategoryWithProductsSerializer
+    serializer_class = CategorySerializer
+    pagination_class = None
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend, ProductInCategoryFilterBackend]
 
 
 class CartView(APIView):
