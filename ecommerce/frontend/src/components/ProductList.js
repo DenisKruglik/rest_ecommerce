@@ -8,10 +8,11 @@ class ProductList extends Component {
         }
 
         let products = this.props.products.map(product => (
-            <li key={product.id} className="product">
-                <Link to={`/product/${product.id}/`}><h5 className="name">{product.name}</h5></Link>
+            <li key={product.id} className="product mb-3">
+                <Link to={`/product/${product.id}`}><h5 className="name">{product.name}</h5></Link>
                 <small className="sku">{product.sku}</small>
                 <p className="price">{product.price}$</p>
+                <button className="btn btn-primary btn-sm">Add to cart</button>
             </li>
         ));
 

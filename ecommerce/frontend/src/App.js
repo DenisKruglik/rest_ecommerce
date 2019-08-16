@@ -6,6 +6,7 @@ import configureStore from "./configureStore";
 import WelcomePage from "./components/WelcomePage";
 import CategoryPage from "./components/CategoryPage";
 import ProductPage from "./components/ProductPage";
+import LoginForm from "./components/LoginForm";
 
 const store = configureStore();
 
@@ -20,6 +21,7 @@ class App extends Component {
                 <Route exact path="/" component={WelcomePage}/>
                 <Route path="/category/:category" component={CategoryPage}/>
                 <Route path="/product/:product" component={ProductPage}/>
+                <Route path="/login" component={LoginForm}/>
               </Switch>
             </div>
           </Router>

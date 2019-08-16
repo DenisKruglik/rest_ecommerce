@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from .serializers import UserSerializer, GroupSerializer, CategorySerializer, \
+from .serializers import UserSerializer, UserSerializerWithToken, GroupSerializer, CategorySerializer, \
     ProductSerializer, CartSerializer, CartInventorySerializer, OrderSerializer
 from .models import Category, Product, CartInventory, Order
 from rest_framework import permissions
@@ -13,15 +13,37 @@ from .permissions import IsOwnerOrAdmin, IsAdminOrReadOnly
 from .services import CartService
 from .filters import ProductInCategoryFilterBackend
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.decorators import api_view
 
 
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    permission_classes = [permissions.IsAdminUser]
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            permission_classes = [permissions.AllowAny]
+        else:
+            permission_classes = [permissions.IsAdminUser]
+
+        return [permission() for permission in permission_classes]
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return UserSerializerWithToken
+        return UserSerializer
+
+
+@api_view(['GET'])
+def current_user(request):
+    """
+    Determine the current user by their token, and return their data
+    """
+
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
 
 
 class GroupViewSet(viewsets.ModelViewSet):

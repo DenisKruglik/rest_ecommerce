@@ -4,6 +4,8 @@ export const REQUEST_PRODUCTS = 'REQUEST_PRODUCTS';
 export const RECEIVE_PRODUCTS = 'RECEIVE_PRODUCTS';
 export const REQUEST_PRODUCT = 'REQUEST_PRODUCT';
 export const RECEIVE_PRODUCT = 'RECEIVE_PRODUCT';
+export const LOGIN = 'LOGIN';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 
 function requestCategories() {
     return { type: REQUEST_CATEGORIES };
@@ -134,3 +136,11 @@ export function fetchProductIfNeeded(id) {
         }
     };
 }
+
+function login(username, password) {
+    return {
+        type: LOGIN
+    }
+}
+
+// TODO: complete login logic

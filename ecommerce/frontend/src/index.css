@@ -4,7 +4,14 @@ body {
   font-family: sans-serif;
 }
 
-.home-link {
-  font-size: 24px;
-  padding: 2px 5px;
+.pagination .page-item:not(.active):not(.disabled) {
+  cursor: pointer;
+}
+
+#qty {
+  width: 60px;
+}
+
+.product h5, .product p {
+  margin: 0;
 }

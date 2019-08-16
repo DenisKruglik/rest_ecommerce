@@ -16,13 +16,13 @@ class CategoryNav extends React.Component {
         const navItems = this.props.categories.map(
             category => <li key={category.id} className="nav-item">
                 <NavLink
-                    to={`/category/${category.id}/`}
+                    to={`/category/${category.id}`}
                     activeClassName="active"
                     className="nav-link">{category.name}</NavLink>
             </li>
         );
         return (
-            <nav>
+            <nav className="flex-grow-1">
                 <ul className="nav">{navItems}</ul>
             </nav>
         );

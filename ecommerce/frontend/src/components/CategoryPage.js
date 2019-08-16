@@ -56,6 +56,7 @@ class CategoryPage extends Component {
                       nextClassName={'page-item'}
                       previousLinkClassName={'page-link'}
                       nextLinkClassName={'page-link'}
+                      forcePage={category.page - 1}
                     />
                 </nav>
             </Fragment>

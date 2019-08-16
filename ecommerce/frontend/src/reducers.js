@@ -12,12 +12,14 @@ const initialState = {
 const products = (state = {
     areProductsFetching: false,
     page: 1,
-    products: []
+    products: [],
+    totalPages: 1
 }, action) => {
     switch (action.type) {
         case REQUEST_PRODUCTS:
             return Object.assign({}, state, {
-                areProductsFetching: true
+                areProductsFetching: true,
+                page: action.page
             });
         case RECEIVE_PRODUCTS:
             return Object.assign({}, state, {
@@ -51,7 +53,7 @@ const rootReducer = (state = initialState, action) => {
             return Object.assign({}, state, { areCategoriesFetching: true });
         case RECEIVE_CATEGORIES:
             return Object.assign({}, state, {
-                    categories: action.categories,
+                    categories: action.categories.map(c => Object.assign(c, { totalPages: 0 })),
                     areCategoriesFetching: false,
                     categoriesLastUpdated: action.receivedAt
                 }
