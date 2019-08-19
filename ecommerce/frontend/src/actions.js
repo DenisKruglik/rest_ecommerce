@@ -9,6 +9,10 @@ export const RECEIVE_PRODUCT = 'RECEIVE_PRODUCT';
 export const LOGIN = 'LOGIN';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const REQUEST_USER = 'REQUEST_USER';
+export const RECEIVE_USER = 'RECEIVE_USER';
+export const REQUEST_USER_FAIL = 'REQUEST_USER_FAIL';
+export const LOGOUT = 'LOGOUT';
 
 function requestCategories() {
     return { type: REQUEST_CATEGORIES };
@@ -195,4 +199,61 @@ function loginFail(error) {
         type: LOGIN_FAIL,
         message: error.message
     }
+}
+
+function requestUser() {
+    return {
+        type: REQUEST_USER
+    };
+}
+
+function receiveUser(json, token) {
+    return {
+        type: RECEIVE_USER,
+        user: json,
+        token
+    };
+}
+
+function shouldFetchUser(state) {
+    return !state.auth.user && (!!state.auth.token || !!localStorage.getItem('authToken'));
+}
+
+function requestUserFail() {
+    return {
+        type: REQUEST_USER_FAIL
+    };
+}
+
+function fetchUser(token) {
+    return dispatch => {
+        dispatch(requestUser());
+        return fetch('/current_user/', {
+            headers: {
+              Authorization: `JWT ${token}`
+            }
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Failed to get user data');
+        }).then(json => dispatch(receiveUser(json, token)))
+            .catch(error => dispatch(requestUserFail()));
+    };
+}
+
+export function fetchUserIfNeeded() {
+    return (dispatch, getState) => {
+        const state = getState();
+        if (shouldFetchUser(state)) {
+            const token = state.auth.token || localStorage.getItem('authToken');
+            return dispatch(fetchUser(token));
+        }
+    };
+}
+
+export function logout() {
+    return {
+        type: LOGOUT
+    };
 }

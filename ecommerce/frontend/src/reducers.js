@@ -7,7 +7,11 @@ import {
     RECEIVE_PRODUCT,
     LOGIN,
     LOGIN_SUCCESS,
-    LOGIN_FAIL
+    LOGIN_FAIL,
+    REQUEST_USER,
+    RECEIVE_USER,
+    REQUEST_USER_FAIL,
+    LOGOUT
 } from "./actions";
 import { combineReducers } from "redux";
 import { flashMessage } from "redux-flash-messages";
@@ -112,6 +116,26 @@ const auth = (state = {
         case LOGIN_FAIL:
             return Object.assign({}, state, {
                 isUserFetching: false
+            });
+        case REQUEST_USER:
+            return Object.assign({}, state, {
+                isUserFetching: true
+            });
+        case RECEIVE_USER:
+            return Object.assign({}, state, {
+                isUserFetching: false,
+                user: action.user,
+                token: action.token
+            });
+        case REQUEST_USER_FAIL:
+            return Object.assign({}, state, {
+                isUserFetching: false
+            });
+        case LOGOUT:
+            localStorage.removeItem('authToken');
+            return Object.assign({}, state, {
+                user: null,
+                token: null
             });
         default:
             return state;
