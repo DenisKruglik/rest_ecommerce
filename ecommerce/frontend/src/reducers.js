@@ -1,13 +1,16 @@
 import {
     REQUEST_CATEGORIES,
-    RECEIVE_CATEGORIES, REQUEST_PRODUCTS, RECEIVE_PRODUCTS, REQUEST_PRODUCT, RECEIVE_PRODUCT
+    RECEIVE_CATEGORIES,
+    REQUEST_PRODUCTS,
+    RECEIVE_PRODUCTS,
+    REQUEST_PRODUCT,
+    RECEIVE_PRODUCT,
+    LOGIN,
+    LOGIN_SUCCESS,
+    LOGIN_FAIL
 } from "./actions";
-
-const initialState = {
-  categories: [],
-  areCategoriesFetching: false,
-  categoriesLastUpdated: null
-};
+import { combineReducers } from "redux";
+import { flashMessage } from "redux-flash-messages";
 
 const products = (state = {
     areProductsFetching: false,
@@ -47,13 +50,17 @@ const mergeArraysWithIdObjects = (arr1, arr2) => {
     return result;
 };
 
-const rootReducer = (state = initialState, action) => {
+const productsData = (state = {
+  categories: [],
+  areCategoriesFetching: false,
+  categoriesLastUpdated: null
+}, action) => {
     switch (action.type) {
         case REQUEST_CATEGORIES:
-            return Object.assign({}, state, { areCategoriesFetching: true });
+            return Object.assign({}, state, {areCategoriesFetching: true});
         case RECEIVE_CATEGORIES:
             return Object.assign({}, state, {
-                    categories: action.categories.map(c => Object.assign(c, { totalPages: 0 })),
+                    categories: action.categories.map(c => Object.assign(c, {totalPages: 0})),
                     areCategoriesFetching: false,
                     categoriesLastUpdated: action.receivedAt
                 }
@@ -85,5 +92,36 @@ const rootReducer = (state = initialState, action) => {
             return state;
     }
 };
+
+const auth = (state = {
+    user: null,
+    isUserFetching: false
+}, action) => {
+    switch (action.type) {
+        case LOGIN:
+            return Object.assign({}, state, {
+                isUserFetching: true
+            });
+        case LOGIN_SUCCESS:
+            localStorage.setItem('authToken', action.token);
+            return Object.assign({}, state, {
+                user: action.user,
+                token: action.token,
+                isUserFetching: false
+            });
+        case LOGIN_FAIL:
+            return Object.assign({}, state, {
+                isUserFetching: false
+            });
+        default:
+            return state;
+    }
+};
+
+const rootReducer = combineReducers({
+    productsData,
+    auth,
+    flashMessage
+});
 
 export default rootReducer;

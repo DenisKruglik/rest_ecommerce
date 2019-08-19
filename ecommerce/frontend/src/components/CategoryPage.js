@@ -66,7 +66,7 @@ class CategoryPage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        category: state.categories.find(item => item.id === ownProps.match.params.category*1)
+        category: state.productsData.categories.find(item => item.id === ownProps.match.params.category*1)
     }
 };
 

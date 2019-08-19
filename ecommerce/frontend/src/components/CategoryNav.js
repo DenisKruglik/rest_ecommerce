@@ -34,7 +34,7 @@ CategoryNav.propTypes = {
 };
 
 const mapStateToProps = state => {
-    const { categories } = state;
+    const { categories } = state.productsData;
     return { categories };
 };
 

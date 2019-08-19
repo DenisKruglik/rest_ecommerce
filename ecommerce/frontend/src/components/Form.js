@@ -8,6 +8,7 @@ class Form extends Component {
             password: ''
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange(e) {
@@ -20,16 +21,22 @@ class Form extends Component {
         });
     }
 
+    handleSubmit(e) {
+        e.preventDefault();
+        this.props.handleSubmit(this.state);
+    }
+
     render() {
         return (
             <Fragment>
                 <h1>{this.props.formTitle}</h1>
-                <form onSubmit={this.props.handleSubmit}>
+                <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
                         <input type="text" required={true}
                                className="form-control"
                                id="username"
+                               name="username"
                                aria-describedby="emailHelp"
                                onChange={this.handleChange}
                                placeholder="Enter username"/>
@@ -39,6 +46,7 @@ class Form extends Component {
                         <input type="password" required={true}
                                className="form-control"
                                id="password"
+                               name="password"
                                onChange={this.handleChange}
                                placeholder="Password"/>
                     </div>

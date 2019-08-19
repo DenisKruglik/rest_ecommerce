@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import Form from "./Form";
+import { login } from "../actions";
+import { connect } from 'react-redux';
 
 class LoginForm extends Component {
     handleSubmit(data) {
-
+        const { dispatch } = this.props;
+        dispatch(login(data.username, data.password));
     }
 
     render() {
@@ -11,4 +14,4 @@ class LoginForm extends Component {
     }
 }
 
-export default LoginForm;
+export default connect()(LoginForm);

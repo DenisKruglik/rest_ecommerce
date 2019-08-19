@@ -7,8 +7,14 @@ import WelcomePage from "./components/WelcomePage";
 import CategoryPage from "./components/CategoryPage";
 import ProductPage from "./components/ProductPage";
 import LoginForm from "./components/LoginForm";
+import { configureFlashMessages } from "redux-flash-messages/lib";
+import FlashMessage from "./components/FlashMessage";
 
 const store = configureStore();
+
+configureFlashMessages({
+  dispatch: store.dispatch
+});
 
 class App extends Component {
   render() {
@@ -17,6 +23,7 @@ class App extends Component {
           <Router>
             <Header/>
             <div className="container">
+              <FlashMessage/>
               <Switch>
                 <Route exact path="/" component={WelcomePage}/>
                 <Route path="/category/:category" component={CategoryPage}/>

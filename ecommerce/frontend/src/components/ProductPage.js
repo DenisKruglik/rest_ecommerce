@@ -76,8 +76,8 @@ class ProductPage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        product: state.product,
-        isFetching: state.isProductFetching
+        product: state.productsData.product,
+        isFetching: state.productsData.isProductFetching
     };
 };
 
